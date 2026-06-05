@@ -33,26 +33,26 @@
             font-size: 0.95em;
         }
 
-        .workspace {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
+        /* Canvas-Hardened Sidebar Grid Layout */
+        .layout-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 25px 0px;
             margin-bottom: 30px;
         }
         
-        .sidebar-vault {
-            flex: 1;
-            min-width: 280px;
+        .sidebar-cell {
+            width: 25%;
+            vertical-align: top;
             background: #fafafa;
             border: 1px solid #ddd;
             padding: 20px;
             border-radius: 8px;
-            height: fit-content;
         }
 
-        .diagram-canvas {
-            flex: 2.5;
-            min-width: 650px;
+        .diagram-cell {
+            width: 75%;
+            vertical-align: top;
             background: #ffffff;
             border: 1px solid #eee;
             border-radius: 8px;
@@ -127,80 +127,81 @@
 <body>
 
 <div class="master-container">
-    <h1>📐 Unit 1.1.1 Practical: Von Neumann Diagrammatic Analyst</h1>
+    <h1>📐 Unit Develop: Von Neumann Diagrammatic Analyst</h1>
     
     <div class="instruction-banner">
-        <strong>Mission Objective (Target Duration: 20 Minutes):</strong> Drag the core modules and architecture bus pipelines into their correct fields on the blueprint map below. The drops zones are locked to the schematic grid, ensuring alignment.
+        <strong>Mission Objective (Target Duration: 20 Minutes):</strong> Drag the core modules and architecture bus pipelines into their correct fields on the blueprint map below. 
     </div>
 
     <div id="global-feedback"></div>
 
-    <div class="workspace">
-        
-        <div class="sidebar-vault">
-            <h3 style="margin-top: 0;">📦 Blueprint Assets</h3>
-            <p style="font-size: 0.8em; color: #666; margin-bottom: 15px;">Drag these elements onto the schematic mapping:</p>
-            
-            <div class="vault-grid" id="vault">
-                <div class="drag-item" draggable="true" id="item-cpu">Central Processing Unit (CPU)</div>
-                <div class="drag-item" draggable="true" id="item-memory">Primary Memory Array (RAM/ROM)</div>
-                <div class="drag-item" draggable="true" id="item-io">Input/Output (I/O) Controllers</div>
-                <div class="drag-item" draggable="true" id="item-address">Address Bus (Uni-directional)</div>
-                <div class="drag-item" draggable="true" id="item-data">Data Bus (Bi-directional)</div>
-                <div class="drag-item" draggable="true" id="item-control">Control Bus (Bi-directional)</div>
-            </div>
-        </div>
-
-        <div class="diagram-canvas">
-            
-            <svg viewBox="0 0 750 480" width="100%">
-                <defs>
-                    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#555"/>
-                    </marker>
-                    <marker id="bus-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#007ba6"/>
-                    </marker>
-                </defs>
-
-                <rect x="20" y="60" width="240" height="240" fill="#fffdf9" stroke="#ef6c00" stroke-width="2" stroke-dasharray="6" rx="8"/>
-                <text x="35" y="85" fill="#ef6c00" font-weight="bold" font-size="14">Internal CPU Boundary</text>
-
-                <path d="M 140 120 L 140 30 L 490 30 L 490 90" fill="none" stroke="#007ba6" stroke-width="8" marker-end="url(#bus-arrow)"/>
+    <table class="layout-table">
+        <tr>
+            <td class="sidebar-cell">
+                <h3 style="margin-top: 0;">📦 Blueprint Assets</h3>
+                <p style="font-size: 0.8em; color: #666; margin-bottom: 15px;">Drag these elements onto the schematic mapping:</p>
                 
-                <path d="M 270 180 L 410 180" fill="none" stroke="#007ba6" stroke-width="8" marker-start="url(#bus-arrow)" marker-end="url(#bus-arrow)"/>
+                <div class="vault-grid" id="vault">
+                    <div class="drag-item" draggable="true" id="item-cpu">Central Processing Unit (CPU)</div>
+                    <div class="drag-item" draggable="true" id="item-memory">Primary Memory Array (RAM/ROM)</div>
+                    <div class="drag-item" draggable="true" id="item-io">Input/Output (I/O) Controllers</div>
+                    <div class="drag-item" draggable="true" id="item-address">Address Bus (Uni-directional)</div>
+                    <div class="drag-item" draggable="true" id="item-data">Data Bus (Bi-directional)</div>
+                    <div class="drag-item" draggable="true" id="item-control">Control Bus (Bi-directional)</div>
+                </div>
+            </td>
+
+            <td class="diagram-cell" style="position: relative;">
                 
-                <path d="M 140 240 L 140 440 L 490 440 L 490 380" fill="none" stroke="#007ba6" stroke-width="8" marker-start="url(#bus-arrow)" marker-end="url(#bus-arrow)"/>
+                <svg viewBox="0 0 750 480" width="100%">
+                    <defs>
+                        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#555"/>
+                        </marker>
+                        <marker id="bus-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#007ba6"/>
+                        </marker>
+                    </defs>
 
-                <path d="M 520 205 L 520 285" fill="none" stroke="#777" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                    <rect x="20" y="60" width="240" height="240" fill="#fffdf9" stroke="#ef6c00" stroke-width="2" stroke-dasharray="6" rx="8"/>
+                    <text x="35" y="85" fill="#ef6c00" font-weight="bold" font-size="14">Internal CPU Boundary</text>
 
-                <foreignObject x="40" y="120" width="200" height="120">
-                    <div class="drop-zone" id="zone-cpu" data-expect="item-cpu">CPU Core Module Space</div>
-                </foreignObject>
+                    <path d="M 140 120 L 140 30 L 490 30 L 490 90" fill="none" stroke="#007ba6" stroke-width="8" marker-end="url(#bus-arrow)"/>
+                    
+                    <path d="M 270 180 L 410 180" fill="none" stroke="#007ba6" stroke-width="8" marker-start="url(#bus-arrow)" marker-end="url(#bus-arrow)"/>
+                    
+                    <path d="M 140 240 L 140 440 L 490 440 L 490 380" fill="none" stroke="#007ba6" stroke-width="8" marker-start="url(#bus-arrow)" marker-end="url(#bus-arrow)"/>
 
-                <foreignObject x="420" y="90" width="210" height="110">
-                    <div class="drop-zone" id="zone-memory" data-expect="item-memory">Primary Storage Array</div>
-                </foreignObject>
+                    <path d="M 520 205 L 520 285" fill="none" stroke="#777" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
 
-                <foreignObject x="420" y="290" width="210" height="110">
-                    <div class="drop-zone" id="zone-io" data-expect="item-io">Input/Output Systems Interface</div>
-                </foreignObject>
+                    <foreignObject x="40" y="120" width="200" height="120">
+                        <div class="drop-zone" id="zone-cpu" data-expect="item-cpu">CPU Core Module Space</div>
+                    </foreignObject>
 
-                <foreignObject x="200" y="45" width="210" height="40">
-                    <div class="drop-zone" id="zone-address" data-expect="item-address">Top Signal Bus Vector</div>
-                </foreignObject>
+                    <foreignObject x="420" y="90" width="210" height="110">
+                        <div class="drop-zone" id="zone-memory" data-expect="item-memory">Primary Storage Array</div>
+                    </foreignObject>
 
-                <foreignObject x="260" y="200" width="140" height="40">
-                    <div class="drop-zone" id="zone-data" data-expect="item-data">Central Routing Lines</div>
-                </foreignObject>
+                    <foreignObject x="420" y="290" width="210" height="110">
+                        <div class="drop-zone" id="zone-io" data-expect="item-io">Input/Output Systems Interface</div>
+                    </foreignObject>
 
-                <foreignObject x="200" y="385" width="210" height="40">
-                    <div class="drop-zone" id="zone-control" data-expect="item-control">Bottom Synchronization Bus</div>
-                </foreignObject>
-            </svg>
+                    <foreignObject x="200" y="45" width="210" height="40">
+                        <div class="drop-zone" id="zone-address" data-expect="item-address">Top Signal Bus Vector</div>
+                    </foreignObject>
 
-        </div>
-    </div>
+                    <foreignObject x="260" y="200" width="140" height="40">
+                        <div class="drop-zone" id="zone-data" data-expect="item-data">Central Routing Lines</div>
+                    </foreignObject>
+
+                    <foreignObject x="200" y="385" width="210" height="40">
+                        <div class="drop-zone" id="zone-control" data-expect="item-control">Bottom Synchronization Bus</div>
+                    </foreignObject>
+                </svg>
+
+            </td>
+        </tr>
+    </table>
 
     <div class="controls">
         <button class="console-btn" onclick="verifySystemSchematic()">Verify System Configuration</button>
