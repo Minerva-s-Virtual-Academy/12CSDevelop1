@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unit 1.1.1: System Architecture Rigorous Practicum</title>
+    <title>Unit 1.1.1 Challenge: Diagrammatic Von Neumann Architect</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -25,13 +25,6 @@
         h1, h2, h3 { color: #007ba6; }
         h1 { margin-top: 0; border-bottom: 2px solid #007ba6; padding-bottom: 10px;}
         
-        .section-block {
-            margin-bottom: 45px;
-            padding: 25px;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            background: #fff;
-        }
         .instruction-banner {
             background-color: #f4f9fb;
             border-left: 5px solid #007ba6;
@@ -39,20 +32,43 @@
             margin-bottom: 25px;
             font-size: 0.95em;
         }
-        
-        /* Drag and Drop Elements */
-        .drag-vault {
-            background: #fdfdfd;
-            border: 1px dashed #ccc;
-            padding: 20px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-        .flex-vault {
+
+        /* Workspace Grid Split */
+        .workspace {
             display: flex;
             flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .sidebar-vault {
+            flex: 1;
+            min-width: 280px;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            height: fit-content;
+        }
+
+        .diagram-canvas {
+            flex: 2;
+            min-width: 600px;
+            background: #ffffff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+        }
+
+        /* Draggable items layout */
+        .vault-grid {
+            display: flex;
+            flex-direction: column;
             gap: 12px;
         }
+
         .drag-item {
             background: #fff;
             border: 1px solid #bbb;
@@ -60,44 +76,60 @@
             padding: 10px 15px;
             border-radius: 4px;
             cursor: grab;
-            font-size: 0.88em;
-            font-weight: 500;
+            font-size: 0.85em;
+            font-weight: 600;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            user-select: none;
         }
-        .grid-board {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .drop-target {
-            border: 2px dashed #007ba6;
-            border-radius: 6px;
-            padding: 15px;
-            min-height: 90px;
-            background: #fff;
-        }
-        .drop-target.hovered { background: #e0f2f1; }
-        
-        /* Form Inputs for Scenarios */
-        .scenario-box {
-            background: #fff9f9;
-            border: 1px solid #ffcccc;
-            border-left: 4px solid #d32f2f;
-            padding: 20px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-        select, type {
-            padding: 8px 12px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            font-size: 0.9em;
+        .drag-item:active { cursor: grabbing; }
+
+        /* SVG Schematic styling */
+        svg {
             width: 100%;
-            max-width: 400px;
-            margin-top: 10px;
+            height: auto;
+        }
+        .schematic-box {
+            fill: #fff;
+            stroke: #333;
+            stroke-width: 2;
+        }
+        .cpu-boundary {
+            fill: #fffdf9;
+            stroke: #ef6c00;
+            stroke-width: 2;
+            stroke-dasharray: 6;
+        }
+        .arrow-line {
+            stroke: #777;
+            stroke-width: 2;
+            fill: none;
+        }
+        .bus-line {
+            stroke: #007ba6;
+            stroke-width: 6;
+            fill: none;
         }
 
-        /* Diagnostic Panel */
+        /* Absolute Drop Zones layered over the SVG */
+        .drop-zone {
+            position: absolute;
+            border: 2px dashed #007ba6;
+            background: rgba(244, 249, 2fb, 0.7);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75em;
+            font-weight: bold;
+            color: #007ba6;
+            text-align: center;
+            padding: 4px;
+            box-sizing: border-box;
+        }
+        .drop-zone.hovered { background: #e0f2f1; border-color: #2e7d32; }
+
+        /* Console Check Panel */
+        .controls { text-align: center; margin-top: 20px; }
         .console-btn {
             background: #007ba6;
             color: #fff;
@@ -124,193 +156,157 @@
 <body>
 
 <div class="master-container">
-    <h1>📐 Unit 1.1.1 Advanced System Architecture Practicum</h1>
-    <p><em>Target Duration: 20 Minutes. Complete all three investigative validation vectors below.</em></p>
+    <h1>📐 Unit 1.1.1 Practical: Von Neumann Diagrammatic Analyst</h1>
+    
+    <div class="instruction-banner">
+        <strong>Mission Objective (Target Duration: 20 Minutes):</strong> A core requirement of your A-Level specification is interpreting and completing system block diagrams. Drag the core modules and specific architecture bus pipelines into their correct systemic nodes on the blueprint map.
+    </div>
 
-    <div class="section-block" id="vector1">
-        <h2>Phase 1: Bus Directionality &amp; Line Mechanics</h2>
-        <div class="instruction-banner">
-            <strong>Objective:</strong> Map the specific system lines to their correct operational directional restrictions as defined under the standard Von Neumann architecture model.
-        </div>
+    <div id="global-feedback"></div>
+
+    <div class="workspace">
         
-        <div class="drag-vault">
-            <p style="margin-top:0; font-size:0.85em; color:#666;"><strong>Available Components:</strong></p>
-            <div class="flex-vault" id="vault-v1">
-                <div class="drag-item" draggable="true" id="v1-data">Data Bus Line</div>
-                <div class="drag-item" draggable="true" id="v1-address">Address Bus Line</div>
-                <div class="drag-item" draggable="true" id="v1-control">Control Bus Line</div>
+        <div class="sidebar-vault">
+            <h3 style="margin-top: 0;">📦 Blueprint Assets</h3>
+            <p style="font-size: 0.8em; color: #666; margin-bottom: 15px;">Drag these elements into the correct active fields on the schematic mapping to compile the system.</p>
+            
+            <div class="vault-grid" id="vault">
+                <div class="drag-item" draggable="true" id="item-cpu">Central Processing Unit (CPU)</div>
+                <div class="drag-item" draggable="true" id="item-memory">Primary Memory Array (RAM/ROM)</div>
+                <div class="drag-item" draggable="true" id="item-io">Input/Output (I/O) Controllers</div>
+                <div class="drag-item" draggable="true" id="item-address">Address Bus (Uni-directional)</div>
+                <div class="drag-item" draggable="true" id="item-data">Data Bus (Bi-directional)</div>
+                <div class="drag-item" draggable="true" id="item-control">Control Bus (Bi-directional)</div>
             </div>
         </div>
 
-        <div class="grid-board">
-            <div class="drop-target" id="zone-uni" data-expect="v1-address">
-                <h4 style="margin-top:0; color:#555;">⬅️ Uni-Directional Mapping</h4>
-                <p style="font-size:0.8em; color:#777; margin-bottom:10px;">Driven strictly by the CPU to point towards target memory registers or I/O anchors.</p>
-            </div>
-            <div class="drop-target" id="zone-bi1" data-expect="v1-data">
-                <h4 style="margin-top:0; color:#555;">🔄 Bi-Directional Payload Routing</h4>
-                <p style="font-size:0.8em; color:#777; margin-bottom:10px;">Transports the fundamental binary data instructions or arguments values between CPU and memory blocks.</p>
-            </div>
-            <div class="drop-target" id="zone-bi2" data-expect="v1-control">
-                <h4 style="margin-top:0; color:#555;">⚡ Bi-Directional Execution Coordination</h4>
-                <p style="font-size:0.8em; color:#777; margin-bottom:10px;">Routes command clocks, interrupt requests, and status flags across execution nodes.</p>
-            </div>
-        </div>
-    </div>
+        <div class="diagram-canvas" id="canvas-container">
+            
+            <svg viewBox="0 0 600 400" width="100%" height="400">
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#555"/>
+                    </marker>
+                    <marker id="bus-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#007ba6"/>
+                    </marker>
+                </defs>
 
-    <div class="section-block" id="vector2">
-        <h2>Phase 2: Primary Memory Space Hierarchy</h2>
-        <div class="instruction-banner">
-            <strong>Objective:</strong> Categorise specific architectural roles based on speed, volatility constraints, and operational execution mechanics.
-        </div>
+                <rect x="20" y="30" width="220" height="180" class="cpu-boundary" />
+                <text x="30" y="50" fill="#ef6c00" font-weight="bold" font-size="12">Internal CPU Boundary</text>
 
-        <div class="drag-vault">
-            <p style="margin-top:0; font-size:0.85em; color:#666;"><strong>Available Structures:</strong></p>
-            <div class="flex-vault" id="vault-v2">
-                <div class="drag-item" draggable="true" id="v2-cache">L1/L2 High-Speed Cache</div>
-                <div class="drag-item" draggable="true" id="v2-ram">System RAM Matrix</div>
-                <div class="drag-item" draggable="true" id="v2-rom">Bootstrap Loader ROM Block</div>
-            </div>
-        </div>
+                <rect x="40" y="80" width="180" height="100" rx="5" class="schematic-box" style="fill: #fff9f5; stroke: #ef6c00;" />
+                <rect x="360" y="30" width="200" height="100" rx="5" class="schematic-box" />
+                <rect x="360" y="240" width="200" height="100" rx="5" class="schematic-box" />
 
-        <div class="grid-board">
-            <div class="drop-target" id="zone-m1" data-expect="v2-cache">
-                <h4 style="margin-top:0; color:#555;">⚡ Immediate CPU Core Buffer</h4>
-                <p style="font-size:0.8em; color:#777; margin-bottom:10px;">Volatile storage designed specifically to eliminate wait-states inside the Fetch-Decode-Execute sequence loop.</p>
-            </div>
-            <div class="drop-target" id="zone-m2" data-expect="v2-ram">
-                <h4 style="margin-top:0; color:#555;">💾 Active Environment Cache Map</h4>
-                <p style="font-size:0.8em; color:#777; margin-bottom:10px;">Volatile space housing active Operating System modules, active background runtime variables, and executing user applications.</p>
-            </div>
-            <div class="drop-target" id="zone-m3" data-expect="v2-rom">
-                <h4 style="margin-top:0; color:#555;">🔒 Non-Volatile Hardened Logic</h4>
-                <p style="font-size:0.8em; color:#777; margin-bottom:10px;">Immutable memory context holding essential initialization parameters required before software environment initialization vectors activate.</p>
-            </div>
-        </div>
-    </div>
+                <path d="M 130 80 L 130 10 L 460 10 L 460 30" class="bus-line" marker-end="url(#bus-arrow)"/>
+                
+                <path d="M 220 110 L 360 110" class="bus-line" marker-start="url(#bus-arrow)" marker-end="url(#bus-arrow)"/>
+                
+                <path d="M 130 180 L 130 380 L 460 380 L 460 340" class="bus-line" marker-start="url(#bus-arrow)" marker-end="url(#bus-arrow)"/>
 
-    <div class="section-block" id="vector3">
-        <h2>Phase 3: Diagnostic Architectural Analysis (A-Level Application)</h2>
-        <div class="instruction-banner">
-            <strong>Objective:</strong> Act as an external diagnostics engineer. Review the two technical symptoms below and decide which hardware system asset or bus subsystem is at fault.
-        </div>
+                <path d="M 460 130 L 460 240" class="arrow-line" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+            </svg>
 
-        <div class="scenario-box">
-            <strong style="color:#d32f2f;">System Failure Log Alpha:</strong>
-            <p style="font-size:0.9em; margin-bottom:5px;">A custom testing system boots up safely and executes short algorithms correctly. However, when large programs run, the system crashes because it cannot address more than 65,536 memory locations ($2^{16}$), despite having 4GB of physical RAM fitted.</p>
-            <label for="scen-a"><strong>Engineering Diagnosis:</strong></label><br>
-            <select id="scen-a">
-                <option value="none">-- Select Structural Fault Assessment --</option>
-                <option value="data-width">The Data Bus is too narrow to hold large values</option>
-                <option value="address-width">The Address Bus width is physically restricted to 16 lines</option>
-                <option value="ram-fail">The RAM chips are volatile and suffering power drop-out</option>
-            </select>
-        </div>
+            <div class="drop-zone" id="zone-cpu" data-expect="item-cpu" style="left: 50px; top: 110px; width: 160px; height: 50px;">CPU Core Units</div>
+            
+            <div class="drop-zone" id="zone-memory" data-expect="item-memory" style="left: 370px; top: 60px; width: 180px; height: 50px;">Primary Storage Space</div>
+            
+            <div class="drop-zone" id="zone-io" data-expect="item-io" style="left: 370px; top: 270px; width: 180px; height: 50px;">Peripherals Interface</div>
 
-        <div class="scenario-box">
-            <strong style="color:#d32f2f;">System Failure Log Beta:</strong>
-            <p style="font-size:0.9em; margin-bottom:5px;">An embedded processor tracks high-frequency industrial sensors. While running, the CPU spends 82% of its instruction clock cycles sitting idle (stalled), waiting for values to arrive from the main system storage chips across the bus array.</p>
-            <label for="scen-b"><strong>Engineering Diagnosis:</strong></label><br>
-            <select id="scen-b">
-                <option value="none">-- Select Structural Fault Assessment --</option>
-                <option value="cache-absence">Absence or insufficiency of Cache capacity causing a Von Neumann bottleneck</option>
-                <option value="rom-corruption">The Bootstrap loader software loop has corrupted</option>
-                <option value="control-direction">The Control Bus has flipped to uni-directional state</option>
-            </select>
+            <div class="drop-zone" id="zone-address" data-expect="item-address" style="left: 200px; top: 15px; width: 200px; height: 32px;">Top Bus Vector Line</div>
+            
+            <div class="drop-zone" id="zone-data" data-expect="item-data" style="left: 235px; top: 130px; width: 200px; height: 32px;">Middle Bus Vector Line</div>
+            
+            <div class="drop-zone" id="zone-control" data-expect="item-control" style="left: 200px; top: 345px; width: 200px; height: 32px;">Bottom Bus Vector Line</div>
+
         </div>
     </div>
 
-    <div style="text-align: center;">
-        <button class="console-btn" onclick="evaluateEntireSystem()">Run Global System Audit</button>
-        <div id="global-feedback"></div>
+    <div class="controls">
+        <button class="console-btn" onclick="verifySystemSchematic()">Verify System Configuration</button>
     </div>
 </div>
 
 <script>
-    let draggedItem = null;
-    const items = document.querySelectorAll('.drag-item');
-    const targets = document.querySelectorAll('.drop-target');
+    let draggedElement = null;
+    const dragItems = document.querySelectorAll('.drag-item');
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const vaultContainer = document.getElementById('vault');
 
-    // Drag Operations Engine
-    items.forEach(item => {
+    // Drag API Operations Loop
+    dragItems.forEach(item => {
         item.addEventListener('dragstart', function() {
-            draggedItem = this;
-            setTimeout(() => this.style.display = 'none', 0);
+            draggedElement = this;
+            setTimeout(() => this.style.opacity = '0.4', 0);
         });
         item.addEventListener('dragend', function() {
-            setTimeout(() => {
-                this.style.display = 'block';
-                draggedItem = null;
-            }, 0);
+            this.style.opacity = '1';
+            draggedElement = null;
         });
     });
 
-    targets.forEach(target => {
-        target.addEventListener('dragover', e => e.preventDefault());
-        target.addEventListener('dragenter', function(e) {
+    dropZones.forEach(zone => {
+        zone.addEventListener('dragover', e => e.preventDefault());
+        
+        zone.addEventListener('dragenter', function(e) {
             e.preventDefault();
             this.classList.add('hovered');
         });
-        target.addEventListener('dragleave', function() {
+        
+        zone.addEventListener('dragleave', function() {
             this.classList.remove('hovered');
         });
-        target.addEventListener('drop', function() {
+        
+        zone.addEventListener('drop', function() {
             this.classList.remove('hovered');
+            // Structural constraint: limit to single instantiation allocation per node field
             if (this.querySelectorAll('.drag-item').length === 0) {
-                this.appendChild(draggedItem);
+                this.innerHTML = ''; // Strip text placeholders out dynamically
+                this.appendChild(draggedElement);
             }
         });
     });
 
-    // Vault return hooks
-    document.querySelectorAll('.drag-vault').forEach(vault => {
-        vault.addEventListener('dragover', e => e.preventDefault());
-        vault.addEventListener('drop', function() {
-            if (draggedItem) {
-                this.querySelector('.flex-vault').appendChild(draggedItem);
-            }
-        });
+    // Permit recovery back out to source vault vector matrix
+    vaultContainer.addEventListener('dragover', e => e.preventDefault());
+    vaultContainer.addEventListener('drop', function() {
+        if (draggedElement) {
+            vaultContainer.appendChild(draggedElement);
+        }
     });
 
-    // Global Validation and Grading Logic
-    function evaluateEntireSystem() {
-        let totalScore = 0;
-        const maxScore = 8; // 6 drag slots + 2 scenario selects
-        const consoleLog = document.getElementById('global-feedback');
+    // Verification Logic & Grading Script Engine
+    function verifySystemSchematic() {
+        let accurateHits = 0;
+        const targetCapacity = dropZones.length;
+        const feedbackWindow = document.getElementById('global-feedback');
 
-        // Evaluate Drop Target Placements
-        targets.forEach(target => {
-            const slottedItem = target.querySelector('.drag-item');
-            const expectedKey = target.getAttribute('data-expect');
+        dropZones.forEach(zone => {
+            const connectedCard = zone.querySelector('.drag-item');
+            const criteriaMatch = zone.getAttribute('data-expect');
 
-            if (slottedItem && slottedItem.id === expectedKey) {
-                target.style.borderColor = '#2e7d32';
-                target.style.backgroundColor = '#e8f5e9';
-                totalScore++;
-            } else if (slottedItem) {
-                target.style.borderColor = '#c62828';
-                target.style.backgroundColor = '#ffebee';
+            if (connectedCard && connectedCard.id === criteriaMatch) {
+                zone.style.borderColor = '#2e7d32';
+                zone.style.backgroundColor = 'rgba(232, 245, 233, 0.9)';
+                accurateHits++;
+            } else if (connectedCard) {
+                zone.style.borderColor = '#c62828';
+                zone.style.backgroundColor = 'rgba(255, 235, 238, 0.9)';
             } else {
-                target.style.borderColor = '#007ba6';
-                target.style.backgroundColor = '#fff';
+                zone.style.borderColor = '#007ba6';
+                zone.style.backgroundColor = 'rgba(244, 249, 2fb, 0.7)';
             }
         });
 
-        // Evaluate Diagnostic Scenarios
-        const answerA = document.getElementById('scen-a').value;
-        const answerB = document.getElementById('scen-b').value;
-
-        if (answerA === 'address-width') totalScore++;
-        if (answerB === 'cache-absence') totalScore++;
-
-        // Render System Status Reports
-        consoleLog.style.display = 'block';
-        if (totalScore === maxScore) {
-            consoleLog.className = 'pass-state';
-            consoleLog.innerHTML = `🚀 Diagnostics Status: 100% OPERATIONAL [Score: ${totalScore}/${maxScore}]. Brilliant analysis. You have demonstrated rigorous structural understanding of buses, latency structures, and design considerations. Core module initialized successfully.`;
+        // Generate context-driven diagnostic reports back to the UI interface
+        feedbackWindow.style.display = 'block';
+        if (accurateHits === targetCapacity) {
+            feedbackWindow.className = 'pass-state';
+            feedbackWindow.innerHTML = `🚀 Compilation Status: SUCCESS [Score: ${accurateHits}/${targetCapacity}]. Architectural model integrity confirmed. Buses track accurate flow routes, and system components map precisely to standard Von Neumann conventions. Exceptional schematic reading skills!`;
         } else {
-            consoleLog.className = 'fail-state';
-            consoleLog.innerHTML = `⚠️ Diagnostics Status: MISCONFIGURATION DETECTED [Score: ${totalScore}/${maxScore}]. Some system mappings or engineering diagnoses are incorrect. Review the components marked in red and rethink how address limits or CPU idling relates to hardware lines!`;
+            feedbackWindow.className = 'fail-state';
+            feedbackWindow.innerHTML = `⚠️ Compilation Status: SCHEMA CRITICAL ERROR [Score: ${accurateHits}/${targetCapacity}]. Component orientation conflict or signal line mismatch discovered. Track directionality markers (arrows) carefully to separate data, command signaling, and tracking paths, then resubmit system compilation query.`;
         }
     }
 </script>
