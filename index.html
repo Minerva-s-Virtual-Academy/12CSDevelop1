@@ -9,7 +9,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 30px auto;
             padding: 0 20px;
             background-color: #fafafa;
@@ -22,7 +22,7 @@
             border-radius: 0 12px 12px 0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        h1, h2, h3 { color: #007ba6; }
+        h1, h3 { color: #007ba6; }
         h1 { margin-top: 0; border-bottom: 2px solid #007ba6; padding-bottom: 10px;}
         
         .instruction-banner {
@@ -33,7 +33,6 @@
             font-size: 0.95em;
         }
 
-        /* Workspace Grid Split */
         .workspace {
             display: flex;
             flex-wrap: wrap;
@@ -52,17 +51,15 @@
         }
 
         .diagram-canvas {
-            flex: 2;
-            min-width: 600px;
+            flex: 2.5;
+            min-width: 650px;
             background: #ffffff;
             border: 1px solid #eee;
             border-radius: 8px;
             padding: 20px;
-            position: relative;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
         }
 
-        /* Draggable items layout */
         .vault-grid {
             display: flex;
             flex-direction: column;
@@ -83,52 +80,25 @@
         }
         .drag-item:active { cursor: grabbing; }
 
-        /* SVG Schematic styling */
-        svg {
-            width: 100%;
-            height: auto;
-        }
-        .schematic-box {
-            fill: #fff;
-            stroke: #333;
-            stroke-width: 2;
-        }
-        .cpu-boundary {
-            fill: #fffdf9;
-            stroke: #ef6c00;
-            stroke-width: 2;
-            stroke-dasharray: 6;
-        }
-        .arrow-line {
-            stroke: #777;
-            stroke-width: 2;
-            fill: none;
-        }
-        .bus-line {
-            stroke: #007ba6;
-            stroke-width: 6;
-            fill: none;
-        }
-
-        /* Absolute Drop Zones layered over the SVG */
+        /* Drop Zones inside SVG */
         .drop-zone {
-            position: absolute;
+            width: 100%;
+            height: 100%;
             border: 2px dashed #007ba6;
-            background: rgba(244, 249, 2fb, 0.7);
-            border-radius: 4px;
+            background: rgba(244, 249, 251, 0.85);
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75em;
+            font-size: 0.8em;
             font-weight: bold;
             color: #007ba6;
             text-align: center;
-            padding: 4px;
             box-sizing: border-box;
+            padding: 5px;
         }
         .drop-zone.hovered { background: #e0f2f1; border-color: #2e7d32; }
 
-        /* Console Check Panel */
         .controls { text-align: center; margin-top: 20px; }
         .console-btn {
             background: #007ba6;
@@ -142,6 +112,7 @@
             transition: all 0.2s ease;
         }
         .console-btn:hover { background: #005a7a; }
+        
         #global-feedback {
             margin-top: 25px;
             padding: 20px;
@@ -159,7 +130,7 @@
     <h1>📐 Unit 1.1.1 Practical: Von Neumann Diagrammatic Analyst</h1>
     
     <div class="instruction-banner">
-        <strong>Mission Objective (Target Duration: 20 Minutes):</strong> A core requirement of your A-Level specification is interpreting and completing system block diagrams. Drag the core modules and specific architecture bus pipelines into their correct systemic nodes on the blueprint map.
+        <strong>Mission Objective (Target Duration: 20 Minutes):</strong> Drag the core modules and architecture bus pipelines into their correct fields on the blueprint map below. The drops zones are locked to the schematic grid, ensuring alignment.
     </div>
 
     <div id="global-feedback"></div>
@@ -168,7 +139,7 @@
         
         <div class="sidebar-vault">
             <h3 style="margin-top: 0;">📦 Blueprint Assets</h3>
-            <p style="font-size: 0.8em; color: #666; margin-bottom: 15px;">Drag these elements into the correct active fields on the schematic mapping to compile the system.</p>
+            <p style="font-size: 0.8em; color: #666; margin-bottom: 15px;">Drag these elements onto the schematic mapping:</p>
             
             <div class="vault-grid" id="vault">
                 <div class="drag-item" draggable="true" id="item-cpu">Central Processing Unit (CPU)</div>
@@ -180,45 +151,53 @@
             </div>
         </div>
 
-        <div class="diagram-canvas" id="canvas-container">
+        <div class="diagram-canvas">
             
-            <svg viewBox="0 0 600 400" width="100%" height="400">
+            <svg viewBox="0 0 750 480" width="100%">
                 <defs>
                     <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                         <path d="M 0 1 L 10 5 L 0 9 z" fill="#555"/>
                     </marker>
-                    <marker id="bus-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#007ba6"/>
+                    <marker id="bus-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#007ba6"/>
                     </marker>
                 </defs>
 
-                <rect x="20" y="30" width="220" height="180" class="cpu-boundary" />
-                <text x="30" y="50" fill="#ef6c00" font-weight="bold" font-size="12">Internal CPU Boundary</text>
+                <rect x="20" y="60" width="240" height="240" fill="#fffdf9" stroke="#ef6c00" stroke-width="2" stroke-dasharray="6" rx="8"/>
+                <text x="35" y="85" fill="#ef6c00" font-weight="bold" font-size="14">Internal CPU Boundary</text>
 
-                <rect x="40" y="80" width="180" height="100" rx="5" class="schematic-box" style="fill: #fff9f5; stroke: #ef6c00;" />
-                <rect x="360" y="30" width="200" height="100" rx="5" class="schematic-box" />
-                <rect x="360" y="240" width="200" height="100" rx="5" class="schematic-box" />
-
-                <path d="M 130 80 L 130 10 L 460 10 L 460 30" class="bus-line" marker-end="url(#bus-arrow)"/>
+                <path d="M 140 120 L 140 30 L 490 30 L 490 90" fill="none" stroke="#007ba6" stroke-width="8" marker-end="url(#bus-arrow)"/>
                 
-                <path d="M 220 110 L 360 110" class="bus-line" marker-start="url(#bus-arrow)" marker-end="url(#bus-arrow)"/>
+                <path d="M 270 180 L 410 180" fill="none" stroke="#007ba6" stroke-width="8" marker-start="url(#bus-arrow)" marker-end="url(#bus-arrow)"/>
                 
-                <path d="M 130 180 L 130 380 L 460 380 L 460 340" class="bus-line" marker-start="url(#bus-arrow)" marker-end="url(#bus-arrow)"/>
+                <path d="M 140 240 L 140 440 L 490 440 L 490 380" fill="none" stroke="#007ba6" stroke-width="8" marker-start="url(#bus-arrow)" marker-end="url(#bus-arrow)"/>
 
-                <path d="M 460 130 L 460 240" class="arrow-line" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                <path d="M 520 205 L 520 285" fill="none" stroke="#777" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+
+                <foreignObject x="40" y="120" width="200" height="120">
+                    <div class="drop-zone" id="zone-cpu" data-expect="item-cpu">CPU Core Module Space</div>
+                </foreignObject>
+
+                <foreignObject x="420" y="90" width="210" height="110">
+                    <div class="drop-zone" id="zone-memory" data-expect="item-memory">Primary Storage Array</div>
+                </foreignObject>
+
+                <foreignObject x="420" y="290" width="210" height="110">
+                    <div class="drop-zone" id="zone-io" data-expect="item-io">Input/Output Systems Interface</div>
+                </foreignObject>
+
+                <foreignObject x="200" y="45" width="210" height="40">
+                    <div class="drop-zone" id="zone-address" data-expect="item-address">Top Signal Bus Vector</div>
+                </foreignObject>
+
+                <foreignObject x="260" y="200" width="140" height="40">
+                    <div class="drop-zone" id="zone-data" data-expect="item-data">Central Routing Lines</div>
+                </foreignObject>
+
+                <foreignObject x="200" y="385" width="210" height="40">
+                    <div class="drop-zone" id="zone-control" data-expect="item-control">Bottom Synchronization Bus</div>
+                </foreignObject>
             </svg>
-
-            <div class="drop-zone" id="zone-cpu" data-expect="item-cpu" style="left: 50px; top: 110px; width: 160px; height: 50px;">CPU Core Units</div>
-            
-            <div class="drop-zone" id="zone-memory" data-expect="item-memory" style="left: 370px; top: 60px; width: 180px; height: 50px;">Primary Storage Space</div>
-            
-            <div class="drop-zone" id="zone-io" data-expect="item-io" style="left: 370px; top: 270px; width: 180px; height: 50px;">Peripherals Interface</div>
-
-            <div class="drop-zone" id="zone-address" data-expect="item-address" style="left: 200px; top: 15px; width: 200px; height: 32px;">Top Bus Vector Line</div>
-            
-            <div class="drop-zone" id="zone-data" data-expect="item-data" style="left: 235px; top: 130px; width: 200px; height: 32px;">Middle Bus Vector Line</div>
-            
-            <div class="drop-zone" id="zone-control" data-expect="item-control" style="left: 200px; top: 345px; width: 200px; height: 32px;">Bottom Bus Vector Line</div>
 
         </div>
     </div>
@@ -234,7 +213,7 @@
     const dropZones = document.querySelectorAll('.drop-zone');
     const vaultContainer = document.getElementById('vault');
 
-    // Drag API Operations Loop
+    // Drag-and-Drop Handlers
     dragItems.forEach(item => {
         item.addEventListener('dragstart', function() {
             draggedElement = this;
@@ -260,15 +239,14 @@
         
         zone.addEventListener('drop', function() {
             this.classList.remove('hovered');
-            // Structural constraint: limit to single instantiation allocation per node field
             if (this.querySelectorAll('.drag-item').length === 0) {
-                this.innerHTML = ''; // Strip text placeholders out dynamically
+                this.innerHTML = ''; 
                 this.appendChild(draggedElement);
             }
         });
     });
 
-    // Permit recovery back out to source vault vector matrix
+    // Vault Drop Return Loop
     vaultContainer.addEventListener('dragover', e => e.preventDefault());
     vaultContainer.addEventListener('drop', function() {
         if (draggedElement) {
@@ -276,7 +254,7 @@
         }
     });
 
-    // Verification Logic & Grading Script Engine
+    // Architecture Auditing Engine
     function verifySystemSchematic() {
         let accurateHits = 0;
         const targetCapacity = dropZones.length;
@@ -288,18 +266,17 @@
 
             if (connectedCard && connectedCard.id === criteriaMatch) {
                 zone.style.borderColor = '#2e7d32';
-                zone.style.backgroundColor = 'rgba(232, 245, 233, 0.9)';
+                zone.style.backgroundColor = '#e8f5e9';
                 accurateHits++;
             } else if (connectedCard) {
                 zone.style.borderColor = '#c62828';
-                zone.style.backgroundColor = 'rgba(255, 235, 238, 0.9)';
+                zone.style.backgroundColor = '#ffebee';
             } else {
                 zone.style.borderColor = '#007ba6';
-                zone.style.backgroundColor = 'rgba(244, 249, 2fb, 0.7)';
+                zone.style.backgroundColor = 'rgba(244, 249, 251, 0.85)';
             }
         });
 
-        // Generate context-driven diagnostic reports back to the UI interface
         feedbackWindow.style.display = 'block';
         if (accurateHits === targetCapacity) {
             feedbackWindow.className = 'pass-state';
